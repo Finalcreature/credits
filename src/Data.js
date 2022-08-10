@@ -24,9 +24,9 @@ function checkVoice(role) {
         ) {
           currentRole = role;
           isAdded = window.confirm("Include " + role.textContent);
-          if (!isAdded) {
-            console.log("didn't add " + role.textContent);
-          }
+          // if (!isAdded) {
+          //   console.log("didn't add " + role.textContent);
+          // }
         } else isAdded = true;
       }
     }
@@ -60,10 +60,10 @@ function evaluateRole(role) {
 }
 
 function getRelevantData() {
-  const item = document.querySelectorAll("a:not(.CSV-link)");
+  const item = document.querySelectorAll("a:not([target = _self])");
 
   try {
-    console.log(item[0].textContent);
+    // console.log(item[0].textContent);
     for (let index = 0; index < item.length; index++) {
       if (checkVoice(item[index].parentElement.parentElement.childNodes[0])) {
         let person = new Personal(
@@ -80,15 +80,6 @@ function getRelevantData() {
         );
         voices.push(person);
       }
-      // if (
-      //   checkVoice(
-      //     item[index].parentElement.parentElement.childNodes[0].textContent
-      //   )
-      // ) {
-      //   personnels.push(person);
-      // } else {
-      //   voices.push(person);
-      // }
     }
     console.log(personnels);
     console.log(voices);
@@ -101,29 +92,9 @@ function getRelevantData() {
   }
 }
 
-//need to turn off on first load
-getRelevantData();
+setTimeout(getRelevantData, 1);
 
 const Data = (props) => {
-  //   const value = `
-  //   `;
-
-  //   let arrayOfCredits = value.split(" ");
-  //   let roles = [];
-
-  //   arrayOfCredits.forEach((e) => {
-  //     if (e.includes(":")) {
-  //       e = e.replace(":", "");
-  //       roles.push(e);
-  //     } else if (e !== "" && !e.includes(",")) {
-  //       props.names.push(e);
-
-  //       let person = new Personal(e, roles[roles.length - 1]);
-  //       personnels.push(person);
-  //     }
-  //   });
-  //   props.names.push(personnels);
-
   return (
     <div>
       <Table />
@@ -141,6 +112,24 @@ const Data = (props) => {
   );
 };
 
-// console.log(personnels);
-
 export default Data;
+
+//old fetching method
+//   const value = `
+//   `;
+
+//   let arrayOfCredits = value.split(" ");
+//   let roles = [];
+
+//   arrayOfCredits.forEach((e) => {
+//     if (e.includes(":")) {
+//       e = e.replace(":", "");
+//       roles.push(e);
+//     } else if (e !== "" && !e.includes(",")) {
+//       props.names.push(e);
+
+//       let person = new Personal(e, roles[roles.length - 1]);
+//       personnels.push(person);
+//     }
+//   });
+//   props.names.push(personnels);
