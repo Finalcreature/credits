@@ -10,51 +10,64 @@ class Personal {
 }
 
 const personnels = [{}];
+const voices = [{}];
 let currentRole = null;
-let isAdded = false;
+let isAdded = true;
 
 function evaluateRole(role) {
-  if (role !== currentRole) {
-    if (role) {
-      if (role.includes("Voice") || role.includes("Actor")) {
-        currentRole = role;
-        isAdded = window.confirm("Include " + role);
+  if (role) {
+    if (role !== currentRole) {
+      {
+        if (
+          role.toLowerCase().includes("voice") ||
+          role.toLowerCase().includes("actor")
+        ) {
+          currentRole = role;
+          isAdded = window.confirm("Include " + role);
+          if (!isAdded) {
+            console.log("didn't add " + role);
+          }
+        } else isAdded = true;
       }
     }
-  } else {
-    console.log("add = " + isAdded);
   }
+  return isAdded;
 }
 
 function toSingular(role) {
-  if (role.textContent.endsWith("s")) {
-    console.log(role.textContent + " is plural");
+  if (
+    role.textContent.endsWith("s") &&
+    !role.textContent.toLowerCase().includes("thanks")
+  ) {
     role.textContent = role.textContent.slice(0, -1);
   }
   return role;
 }
 
 function getRelevantData() {
-  const item = document.getElementsByTagName("a");
+  const item = document.querySelectorAll("a:not(.CSV-link)");
 
   try {
     console.log(item[0].textContent);
     for (let index = 0; index < item.length; index++) {
-      evaluateRole(
-        evaluateRole(
-          item[index].parentElement.parentElement.childNodes[0].textContent
-        )
-      );
       let person = new Personal(
         item[index].textContent,
         toSingular(
           item[index].parentElement.parentElement.childNodes[0]
         ).textContent
       );
-
-      personnels.push(person);
+      if (
+        evaluateRole(
+          item[index].parentElement.parentElement.childNodes[0].textContent
+        )
+      ) {
+        personnels.push(person);
+      } else {
+        voices.push(person);
+      }
     }
     console.log(personnels);
+    console.log(voices);
   } catch (err) {
     const loadButton = document.createElement("button");
     loadButton.innerHTML = "Load Credits";
@@ -63,6 +76,7 @@ function getRelevantData() {
     console.log(err);
   }
 }
+
 //need to turn off on first load
 getRelevantData();
 
@@ -90,7 +104,14 @@ const Data = (props) => {
     <div>
       <Table />
       <div>
-        <CSVLink data={personnels}>Download me</CSVLink>
+        <CSVLink filename={"Full list.csv"} data={personnels}>
+          Download Full list
+        </CSVLink>
+      </div>
+      <div>
+        <CSVLink filename={"Voice-Actors.csv"} data={voices}>
+          Download Voice Actors
+        </CSVLink>
       </div>
     </div>
   );
